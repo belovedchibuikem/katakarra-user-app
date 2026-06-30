@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "720362904167",
+    "project_id": "smartcoophub-4b832",
+    "storage_bucket": "smartcoophub-4b832.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720362904167:android:021836d43616525b33d2c2",
+        "android_client_info": {
+          "package_name": "com.sixamtech.sixam_mart_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "491987943015-agln6biv84krpnngdphj87jkko7r9lb8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_JObaNRtYq3orajRFb0Gf2rR6sTC70Ns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "491987943015-agln6biv84krpnngdphj87jkko7r9lb8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

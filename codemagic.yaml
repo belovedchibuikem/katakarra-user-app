@@ -8,6 +8,16 @@ workflows:
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
+      - name: Verify google-services.json
+        script: |
+          if [ ! -f android/app/google-services.json ]; then
+            if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+              echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+            else
+              echo "google-services.json is missing. Add android/app/google-services.json or set GOOGLE_SERVICES_JSON in Codemagic."
+              exit 1
+            fi
+          fi
       - name: Build Android App Bundle
         script: flutter build appbundle --release
     artifacts:

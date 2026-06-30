@@ -38,10 +38,10 @@ dependencies:
   country_code_picker: ^3.3.0
   cached_network_image: ^3.4.1
   photo_view: ^0.15.0
-  dotted_border: ^2.1.0
-  share_plus: ^10.1.4
+  dotted_border: ^3.1.0
+  share_plus: ^11.1.0
   expandable_bottom_sheet: ^1.1.1+1
-  google_sign_in: ^6.3.0
+  google_sign_in: ^7.2.0
   flutter_facebook_auth: ^7.1.1
   sign_in_with_apple: ^7.0.1
   intl: ^0.20.2
