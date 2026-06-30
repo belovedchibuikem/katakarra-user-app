@@ -5,7 +5,7 @@ import 'package:sixam_mart/util/images.dart';
 
 class AppConstants {
   static const String appName = 'KataKarra';
-  static const double appVersion = 3.9; ///Flutter sdk 3.41.8
+  static const double appVersion = 3.9; ///Flutter sdk 3.10.0
 
   static const String fontFamily = 'Roboto';
   static const bool payInWevView = false;
