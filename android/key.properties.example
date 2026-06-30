@@ -1,0 +1,7 @@
+# Copy this file to android/key.properties and fill in your release keystore details.
+# Never commit key.properties or keystore files to version control.
+
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=katakarra
+storeFile=app/katakarra-release-key.jks

@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.sixamtech.sixam_mart_user",
+    "sha256_cert_fingerprints":
+    ["C2:B5:C7:D8:DD:7A:FF:DA:7A:0B:ED:5E:15:38:FB:47:E1:57:40:9D:1F:7B:8B:DD:EB:CF:7A:1E:B2:97:0F:F8"]
+  }
+}]
