@@ -6,6 +6,7 @@ import 'package:sixam_mart/features/location/domain/models/zone_model.dart';
 import 'package:sixam_mart/features/location/domain/models/zone_response_model.dart';
 import 'package:sixam_mart/features/location/domain/repositories/location_repository_interface.dart';
 import 'package:sixam_mart/util/app_constants.dart';
+import 'package:sixam_mart/helper/store_registration_debug.dart';
 import 'package:sixam_mart/common/widgets/custom_snackbar.dart';
 
 class LocationRepository implements LocationRepositoryInterface {
@@ -26,9 +27,32 @@ class LocationRepository implements LocationRepositoryInterface {
     return address;
   }
 
+  static const String _fallbackLat = '9.0765';
+  static const String _fallbackLng = '7.3986';
+  static const List<List<String>> _invalidTemplateDefaults = [
+    ['23.02918734674459', '90.3515625'],
+    ['23.757989', '90.360587'],
+  ];
+
   @override
   Future<ZoneResponseModel> getZone(String? lat, String? lng, {bool handleError = false}) async {
     Response response = await apiClient.getData('${AppConstants.zoneUri}?lat=$lat&lng=$lng', handleError: handleError);
+    if(response.statusCode == 404 && _shouldUseFallback(lat, lng)) {
+      StoreRegistrationDebug.log('getZone/fallback', {'fromLat': lat, 'fromLng': lng, 'toLat': _fallbackLat, 'toLng': _fallbackLng});
+      response = await apiClient.getData(
+        '${AppConstants.zoneUri}?lat=$_fallbackLat&lng=$_fallbackLng',
+        handleError: handleError,
+      );
+    }
+    StoreRegistrationDebug.logZoneApi(
+      source: 'location_repository',
+      lat: lat ?? '',
+      lng: lng ?? '',
+      statusCode: response.statusCode,
+      success: response.statusCode == 200,
+      zoneIds: response.statusCode == 200 ? ZoneModel.fromJson(response.body).zoneIds : null,
+      message: response.statusCode == 200 ? null : response.statusText,
+    );
     if(response.statusCode == 200) {
       ZoneResponseModel responseModel;
       List<int>? zoneIds = ZoneModel.fromJson(response.body).zoneIds;
@@ -73,6 +97,22 @@ class LocationRepository implements LocationRepositoryInterface {
   @override
   String? getUserAddress() {
     return sharedPreferences.getString(AppConstants.userAddress);
+  }
+
+  bool _isFallbackCoordinate(String? lat, String? lng) {
+    return lat == _fallbackLat && lng == _fallbackLng;
+  }
+
+  bool _shouldUseFallback(String? lat, String? lng) {
+    if (_isFallbackCoordinate(lat, lng)) {
+      return false;
+    }
+    for (final coords in _invalidTemplateDefaults) {
+      if (lat == coords[0] && lng == coords[1]) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

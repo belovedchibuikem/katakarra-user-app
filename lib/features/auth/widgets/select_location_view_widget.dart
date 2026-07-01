@@ -17,6 +17,7 @@ import 'package:sixam_mart/features/splash/controllers/splash_controller.dart';
 import 'package:sixam_mart/features/auth/controllers/store_registration_controller.dart';
 import 'package:sixam_mart/features/location/widgets/location_search_dialog_widget.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
+import 'package:sixam_mart/helper/store_registration_debug.dart';
 import 'package:sixam_mart/helper/validate_check.dart';
 import 'package:sixam_mart/util/app_constants.dart';
 import 'package:sixam_mart/util/dimensions.dart';
@@ -51,10 +52,14 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
   bool _hasUserInteractedWithMap = false; // Track if user has moved the map
   bool _isInitialLoad = true; // Track if this is the initial load
   bool _isMarkerVisible = false;
+  String? _lastZoneDetectLog;
 
   @override
   void initState() {
     super.initState();
+    final defaultLat = Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0';
+    final defaultLng = Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0';
+    StoreRegistrationDebug.log('map/init', {'defaultLat': defaultLat, 'defaultLng': defaultLng, 'kIsWeb': kIsWeb});
     // Initialize camera position but don't set any zone or location
     _cameraPosition = CameraPosition(
       target: LatLng(
@@ -274,6 +279,15 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
                 // Automatically find the zone for the current location
                 int? foundZoneIndex = _findZoneForLocation(_cameraPosition.target, storeRegController.zoneList!);
 
+                _lastZoneDetectLog = foundZoneIndex != null
+                    ? 'idx=$foundZoneIndex id=${storeRegController.zoneList![foundZoneIndex].id}'
+                    : 'none';
+                StoreRegistrationDebug.log('map/onCameraIdle', {
+                  'lat': _cameraPosition.target.latitude,
+                  'lng': _cameraPosition.target.longitude,
+                  'foundZoneIndex': foundZoneIndex,
+                });
+
                 if (foundZoneIndex != null) {
                   // Update the zone index and polygon if a different zone was found
                   if (storeRegController.selectedZoneIndex != foundZoneIndex) {
@@ -316,6 +330,7 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
               onCameraMove: ((position) => _cameraPosition = position),
               onMapCreated: (GoogleMapController controller) {
                 _mapController = controller;
+                StoreRegistrationDebug.log('map/onMapCreated', {'kIsWeb': kIsWeb});
                 // Don't set any polygon initially - wait for user interaction
               },
               myLocationButtonEnabled: false,
@@ -567,6 +582,12 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
                 ]),
               ),
             ) : const SizedBox(),
+
+            StoreRegistrationDebugPanel(
+              polygonCount: _polygons.length,
+              mapCreated: _mapController != null,
+              lastZoneDetect: _lastZoneDetectLog,
+            ),
 
           ]),
         ),

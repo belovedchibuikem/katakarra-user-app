@@ -42,7 +42,8 @@
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_MAP_KEY"></script>
+  <!-- Browser Maps key (same as katakarra-frontend-react NEXT_PUBLIC_GOOGLE_MAP_KEY). Android key is not valid for web referrers. -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArRbQ84PWiesV__m1qdR5PhIbzHE7czu0&libraries=places"></script>
 <!--  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>-->
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -155,7 +156,7 @@
            serviceWorkerVersion: {{flutter_service_worker_version}},
          },
          onEntrypointLoaded: function(engineInitializer) {
-         let config = { renderer: 'html' };
+         let config = { renderer: 'canvaskit' };
            engineInitializer.initializeEngine(config).then(function(appRunner) {
              if(document.getElementById('splash'))
                document.getElementById('splash').remove();

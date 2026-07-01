@@ -31,7 +31,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.sixamtech.sixam_mart_user"
+        applicationId = "com.smartlogix.katakarra_user"
         minSdk = flutter.minSdkVersion
         targetSdk = 36
         versionCode = flutter.versionCode

@@ -1,14 +1,34 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter App",
+      "name": "Web: Store Registration (debug)",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "toolArgs": [
+        "--web-port=8080"
+      ],
+      "args": [
+        "--web-launch-url=http://localhost:8080/store-registration"
+      ]
+    },
+    {
+      "name": "Web: Home (debug)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "toolArgs": [
+        "--web-port=8080"
+      ]
+    },
+    {
+      "name": "Android (debug)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart"
     }
   ]
 }

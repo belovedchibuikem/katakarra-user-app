@@ -18,6 +18,7 @@ import 'package:sixam_mart/features/auth/domain/models/store_body_model.dart';
 import 'package:sixam_mart/features/auth/domain/services/store_registration_service_interface.dart';
 import 'package:sixam_mart/helper/date_converter.dart';
 import 'package:sixam_mart/helper/route_helper.dart';
+import 'package:sixam_mart/helper/store_registration_debug.dart';
 
 class StoreRegistrationController extends GetxController implements GetxService {
   final StoreRegistrationServiceInterface storeRegistrationServiceInterface;
@@ -161,6 +162,12 @@ class StoreRegistrationController extends GetxController implements GetxService 
   }
 
   Future<void> setZoneIndex(int? index, {bool canUpdate = true}) async {
+    StoreRegistrationDebug.log('setZoneIndex', {
+      'index': index,
+      'zoneId': (index != null && index >= 0 && zoneList != null) ? zoneList![index].id : null,
+      'zoneName': (index != null && index >= 0 && zoneList != null) ? zoneList![index].name : null,
+      'canUpdate': canUpdate,
+    });
     _selectedZoneIndex = index;
     _moduleList = null;
     _selectedModuleIndex = -1;
@@ -242,12 +249,17 @@ class StoreRegistrationController extends GetxController implements GetxService 
   }
 
   Future<void> getZoneList({bool resetAddress = false}) async {
+    StoreRegistrationDebug.log('getZoneList/start', {'resetAddress': resetAddress});
     _pickedLogo = null;
     _pickedCover = null;
     _selectedZoneIndex = 0;
     _restaurantLocation = null;
     _zoneIds = null;
     List<ZoneDataModel>? zones = await storeRegistrationServiceInterface.getZoneList();
+    StoreRegistrationDebug.log('getZoneList/response', {
+      'count': zones?.length ?? 0,
+      'names': zones?.map((z) => z.name).join(', '),
+    });
     if (zones != null) {
       _zoneList = [];
       _zoneList!.addAll(zones);
@@ -261,13 +273,29 @@ class StoreRegistrationController extends GetxController implements GetxService 
   }
 
   void setLocation(LatLng location, {bool forStoreRegistration = false, int? zoneId, bool resetAddress = false}) async {
+    StoreRegistrationDebug.log('setLocation/start', {
+      'lat': location.latitude,
+      'lng': location.longitude,
+      'zoneId': zoneId,
+      'forStoreRegistration': forStoreRegistration,
+    });
     ZoneResponseModel response = await locationServiceInterface.getZone(location.latitude.toString(), location.longitude.toString());
+    StoreRegistrationDebug.logZoneApi(
+      source: 'setLocation',
+      lat: location.latitude.toString(),
+      lng: location.longitude.toString(),
+      statusCode: response.zoneIds.isNotEmpty ? 200 : 404,
+      success: response.isSuccess,
+      zoneIds: response.zoneIds,
+      message: response.message,
+    );
 
     if(zoneId != null) {
       _inZone = await storeRegistrationServiceInterface.checkInZone(location.latitude.toString(), location.longitude.toString(), zoneId);
     }else{
       _inZone = false;
     }
+    StoreRegistrationDebug.log('setLocation/checkInZone', {'zoneId': zoneId, 'inZone': _inZone});
 
     if(resetAddress){
       _storeAddress = '';
@@ -291,6 +319,12 @@ class StoreRegistrationController extends GetxController implements GetxService 
       _zoneIds = null;
       _inZone = false;
     }
+    StoreRegistrationDebug.log('setLocation/done', {
+      'inZone': _inZone,
+      'selectedZoneIndex': _selectedZoneIndex,
+      'zoneIds': _zoneIds?.join(','),
+      'address': _storeAddress,
+    });
     update();
   }
 
